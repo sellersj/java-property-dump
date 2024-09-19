@@ -1,0 +1,45 @@
+name: Build Installers
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+  schedule:
+    - cron: '0 5 * * 1-5'
+
+jobs:
+  build-linux-installer:
+    name: Build Installer on Linux
+    runs-on: ubuntu-latest
+    steps:
+    # SETUP BUILD ENVIRONMENT
+    - id: checkout-code
+      name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        ref: main
+    - id: setup-jdk
+      name: Setup JDK
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: 8
+        cache: maven
+    # BUILD FOR DISTRIBUTION
+    - id: build
+      name: Build distribution
+      run: |
+        ./mvnw -B -V clean verify
+    # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
+    - name: Update dependency graph
+      uses: advanced-security/maven-dependency-submission-action@v4.1.1
+    # SAVE INSTALLER
+    - id: upload-artifact
+      name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        path: ./target/java-property-dump*.zip
+        name: linux-installer
+        retention-days: 7
+
+
