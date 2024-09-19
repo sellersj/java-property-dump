@@ -36,7 +36,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         path: ./target/java-property-dump*.jar
-        name: linux-installer
+        name: built-artifact
         retention-days: 7
 
 
