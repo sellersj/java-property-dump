@@ -33,7 +33,7 @@ jobs:
     # SAVE INSTALLER
     - id: upload-artifact
       name: Upload artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         path: ./target/java-property-dump*.jar
         name: built-artifact
